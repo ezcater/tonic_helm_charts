@@ -8,6 +8,11 @@ rules:
 - apiGroups: ["", "extensions", "apps"]
   resources: ["pods", "pods/log", "deployments", "replicasets", "secrets"]
   verbs: ["get", "list", "patch", "delete", "update"]
+{{- if ((.Values.tonicai).rbac).additionalRules }}
+{{- with .Values.tonicai.rbac.additionalRules }}
+{{- toYaml . | nindent 0 }}
+{{- end }}
+{{- end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
