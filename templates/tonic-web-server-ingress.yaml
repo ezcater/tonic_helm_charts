@@ -5,7 +5,7 @@ kind: Ingress
 metadata:
   name: tonic-web-server-ingress
   namespace: {{ .Release.Namespace }}
-  {{- if ((.Values.tonicai.ingress).annotations }}
+  {{- if ((.Values.tonicai).ingress).annotations }}
   annotations:
     {{- toYaml .Values.tonicai.ingress.annotations | nindent 4 }}
   {{- else }}
