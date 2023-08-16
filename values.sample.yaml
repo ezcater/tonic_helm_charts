@@ -132,7 +132,6 @@ tonicai:
   # additional annotations will disable this
   #  annotations: {}
 
-
 # Deployment Strategy: This can be set to either "RollingUpdate" or "Recreate".  If not provided, the default value
 # is "RollingUpdate".  "RollingUpdate" will perform a rolling update of the deployment similar to a blue/green
 # deployment and thus requires additional resources as both old and new versions will be running silmultaneously
