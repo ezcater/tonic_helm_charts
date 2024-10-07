@@ -1,31 +1,34 @@
-{{- if eq (include "tonic.hostIntegration" .) "true" }}
+{{- if ((.Values.containerization).rbac).create }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  labels:
-    {{- include "tonic.allLabels" (list $) | nindent 4 }}
   annotations:
     {{- include "tonic.annotations" (list $) | nindent 4 }}
-  name: {{ .Values.tonicai.web_server.features.kubernetes_role | default "default" }}
+  labels:
+    {{- include "tonic.allLabels" (list $) | nindent 4 }}
+  name: tonic-containerization
   namespace: {{ .Release.Namespace }}
 rules:
-- apiGroups: ["", "extensions", "apps"]
-  resources: ["pods", "pods/log", "deployments", "replicasets", "secrets"]
-  verbs: ["get", "list", "patch", "delete", "update"]
+  - apiGroups: [""]
+    resources: ["pods", "pods/log"]
+    verbs: ["get", "list", "delete", "create", "watch", "deletecollection"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["list", "delete", "create", "deletecollection"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  labels:
-    {{- include "tonic.allLabels" (list $) | nindent 4 }}
   annotations:
     {{- include "tonic.annotations" (list $) | nindent 4 }}
-  name: role-binding
+  labels:
+    {{- include "tonic.allLabels" (list $) | nindent 4 }}
+  name: tonic-containerization
   namespace: {{ .Release.Namespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: {{ .Values.tonicai.web_server.features.kubernetes_role | default "default" }}
+  name: tonic-containerization
 subjects:
 - kind: ServiceAccount
   name: {{ template "tonic.serviceAccountName" . }}

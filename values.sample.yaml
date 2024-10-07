@@ -1,4 +1,5 @@
 environmentName: <company-name>
+  #
 # useUnprivilegedContainers will pull images that do not run as root if
 # using tonic provided images rather than rehosted customer images
 # additionally it enforces that containers cannot run as root, uses the
@@ -26,7 +27,7 @@ tonicdb:
 # tonicStatisticsSeed will cause generations to be consisent with each other for anything where consistency is set to true.
 # otherwise each generation will be internally consistent, but not consistent with other generations.
 # add quote to integer values to get rid of helm cast large number to float64, refer to this issue: https://github.com/helm/helm/issues/1707
-tonicStatisticsSeed: "<any-integer>"
+# tonicStatisticsSeed: "<any-integer>"
 
 # numberOfWorkers will determine how many worker containers are deployed when installing the helm chart.
 numberOfWorkers: 1
@@ -140,6 +141,20 @@ tonicai:
 # new one created.  This will result in Tonic being down during an update.
 deployStrategy: RollingUpdate
 
+containerization:
+  # if self managing RBAC, to use containerization the tonic service account
+  # will need a rolebinding that grants:
+  # rules:
+  #   - apiGroups: [""]
+  #     resources: ["pods"]
+  #     verbs: ["get", "list", "delete", "create", "watch", "deletecollection"]
+  #   - apiGroups: [""]
+  #     resources: ["secrets"]
+  #     verbs: ["list", "delete", "create", "deletecollection"]
+  rbac:
+    create: true
+  datapacker:
+    imageRepo: quay.io/tonicai/datapacker
 # Professional and Enterprise License Only: Below are the settings for Single Sign On. Not every provider requires every value. The Tonic support team will help you configure this.
 # tonicSsoConfig:
 #   groupFilter: <regex that matches groups to import into Tonic, like .*Tonic.*>
@@ -199,6 +214,18 @@ deployStrategy: RollingUpdate
 #     url: <url to metadataXml, given priority>
 #     base64: <base64 encoded metadataXml>
 #   entityId: <entity id used to send requests from tonic, if not provided, will be determined from metadata xml>
+
+#   Generic OIDC SSO Config
+#   -----------------
+#   provider: OIDC
+#   clientId: <client-id>
+#   authority: <url-of-authority>
+#   optionalConfig:
+#     scopes: <space delimited scopes>
+#     firstNameClaimName: <Name of first name claim if different than OIDC standard>
+#     lastNameClaimName: <Name of last name claim if different than OIDC standard>
+#     emailClaimName: <Name of email/username claim if different than OIDC standard>
+#     groupsClaimName: <Name of groups claim>
 
 # Professional and Enterprise License Only: Configuration options for tonic-notifications.
 # tonicSmtpConfig:
